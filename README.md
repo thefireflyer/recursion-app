@@ -7,7 +7,8 @@
 | Class     | CS240 2963    |
 | Professor | Darrell Criss |
 
----
+[![Rust](https://github.com/thefireflyer/recursion-app/actions/workflows/rust.yml/badge.svg)](https://github.com/thefireflyer/recursion-app/actions/workflows/rust.yml)
+
 
 ## Videos
 
