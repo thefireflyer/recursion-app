@@ -9,7 +9,6 @@
 
 [![Rust](https://github.com/thefireflyer/recursion-app/actions/workflows/rust.yml/badge.svg)](https://github.com/thefireflyer/recursion-app/actions/workflows/rust.yml)
 
-
 ## Videos
 
 - [Spell checker video](https://youtu.be/wyySKhGMwgY)
@@ -33,6 +32,23 @@ I've only made a couple of small changes, but as usual, the source code is avail
   - [`lcd`](/recursion-lib/src/lcd.rs)
 - [Benchmarking code](/benches/bench_main.rs)
 - [Benchmark report](/index.html)
+
+### Approach
+
+**Exponents**
+
+I pretty much just wrote down the mathematical definition of exponentiation.
+
+**Integers to binary**
+
+This was trickier and I'm less happy with my result, but it works well enough. I basically looked a couple of example numbers and results and tried to look for recurring patterns. After playing around with modulo and similar, I ended with the idea that you could find the value associated with a bit and use that to check whether it should be on. I then slowly worked my way through the iterative implementation and then quickly wrote up the equivalent recursive code.
+
+**LCD**
+
+This was the most interesting and I mostly made progress by just trying stuff out in my head. I had already implemented the exponent algorithm and had originally wanted to support fractional exponents, but didn't get it to work, so I had already kind of been thinking about representing and working with fractions. I then mostly worked through what I remembered in middle school math class. Once I got the core ideas down, I starting implementing the iterative version, starting with just simple cases like 1/1 or similar. After getting that to work, I worked through cases like (n\*m)/d and then moved on to (n)/(d\*m). The last part was finding common factors. I just wrote down everything I knew in a mathematical sense and worked from that.
+
+For all of the above, I got unit tests working pretty much out of the gate, before actually implementing the solutions.
+I actually also wrote the benchmarking code before implementing most of them as well.
 
 ### Usage
 
