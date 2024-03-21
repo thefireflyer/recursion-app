@@ -12,10 +12,13 @@
 /// Time complexity: O(e)
 pub fn recursive(x: f64, e: i32) -> f64 {
     if e > 0 {
+        // general case, just multiply x by the rest of the xs
         x * recursive(x, e - 1)
     } else if e < 0 {
+        // edge case, if we have a negative exponent, just rewrite as 1/(x^|e|)
         1.0 / recursive(x, e * -1)
     } else {
+        // terminating case, return 1
         1.0
     }
 }
@@ -35,10 +38,12 @@ pub fn recursive(x: f64, e: i32) -> f64 {
 pub fn iterative(x: f64, e: i32) -> f64 {
     let mut res = 1.0;
 
+    // just repeatedly multiple x by itself |e| times
     for _ in 0..e.abs() {
         res = res * x;
     }
 
+    // rewrite x^(-e) as 1/(x^e)
     if e < 0 {
         1.0 / res
     } else {

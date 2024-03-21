@@ -21,24 +21,40 @@ use tailcall::tailcall;
 ///
 pub fn recursive(x: i64) -> [bool; 64] {
     #[tailcall]
+    /// Generate the binary representation
     fn inner(x: i64, r: &mut [bool; 64], i: usize) {
+        // Starting from the outermost bit, work inwards by checking if the value
+        // associated with that bit is in the remaining total.
+        // If it is, that means that bit should be on and we'll need to update our
+        // running total.
+        // Here, we'll do this recursively so we'll need the `i` tracking variable.
         let y = x - 2i64.pow(i.try_into().unwrap());
         if y >= 0 {
+            // Current total contains the current bit value
+            // Switch bit on
             r[i] = true;
             if i > 0 {
-                inner(x - 2i64.pow(i.try_into().unwrap()), r, i - 1)
+                // Continue generating binary
+                inner(y, r, i - 1)
             }
         } else if i > 0 {
+            // Continue generating binary
             inner(x, r, i - 1)
         }
     }
 
     if x == 0 {
+        // basic edge case
         [false; 64]
     } else {
         let mut res = [false; 64];
+
+        // handle negative numbers
         res[63] = x.signum() < 0;
+
+        // actually compute the binary representation
         inner(x.abs(), &mut res, 62);
+
         res
     }
 }
@@ -77,14 +93,21 @@ pub fn iterative(mut x: i64) -> [bool; 64] {
     // .. .. ...   .... ...   ...   ...   ...|
     // .. .. ...   .... ... 1 ... 2 ... 4 ...|
 
+    // handle negative numbers
     if x.signum() < 0 {
         res[63] = true;
         x = x.abs();
     }
 
+    // starting from the outermost bit, work inwards by checking if the value
+    // associated with that bit is in the remaining total.
+    // if it is, that means that bit should be on and we'll need to update our
+    // running total.
     for i in (0..63usize).rev() {
         let y = x - 2i64.pow(i.try_into().unwrap());
         if y >= 0 {
+            // Current total contains the current bit value
+            // Switch bit on
             res[i] = true;
             x = y;
         }

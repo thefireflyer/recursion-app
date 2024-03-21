@@ -55,35 +55,66 @@ impl std::fmt::Display for Expr {
 ///
 pub fn recursive(mut e: Expr) -> Expr {
     #[tailcall]
+    /// Simplifies expression in the (n/m)/(d/m) form.
+    /// Will maximize m with the following constraints:
+    /// - n/m is an integer
+    /// - d/m is an integer
+    /// - (n/m)/(d/m) = n/d
+    /// - m < d
     fn inner(mut e: Expr, m: i64, gm: i64) -> Expr {
         if m < e.d {
+            // currently looking for larger common factor
             if e.n % m == 0 && e.d % m == 0 {
+                // found better factor, re-curse with new best factor
                 inner(e, m + 1, m)
             } else {
+                // not any better, continue looking
                 inner(e, m + 1, gm)
             }
         } else if e.n % gm == 0 && e.d % gm == 0 && gm < e.d {
+            // finishing looking for a better factor and found one!
+            // update our expression with the lowest common denominator
             e.n = e.n / gm;
             e.d = e.d / gm;
             e
         } else {
+            // couldn't find any common factors
             e
         }
     }
 
     if e.d == 0 {
+        // basic edge case handling
         e
     } else if e.n == e.d {
+        // n/n or d/d, either way its all equal to 1
         Expr::new(1, 1, 1)
     } else {
+        // general case
+
+        // handle case where n is a multiple of d
+        // (d*m)/d -> m OR (n*m)/d -> m(n/d)
         e.c = 1.max(e.n / e.d);
         e.n = e.n / e.c;
 
         if e.d % e.n == 0 {
+            // handle case where d is a constant multiple of n
+            // n/(n*m) -> 1/m
             e.d = e.d / e.n;
             e.n = 1;
             e
         } else {
+            // general general case
+
+            // Form: n/d
+            // Known constraints:
+            // - n != d
+            // - n % d != 0
+            // - d % n != 0
+            // - 1 < n < d
+
+            // find (n/m)/(d/m) cases
+            // iterate up to the current denominator
             inner(e, 2, 2)
         }
     }
@@ -109,24 +140,24 @@ pub fn recursive(mut e: Expr) -> Expr {
 /// Time complexity: O(denominator)
 ///
 pub fn iterative(mut e: Expr) -> Expr {
+    // basic undefined edge case
     if e.d == 0 {
         return e;
     }
 
     println!("--- {}", e);
-    // 1/d stable
-    // n/d, where k is a prime number
-
-    // all inputs are (n*m)/(d*m)
 
     if e.n == e.d {
         println!("n/n or d/d");
         // 1/1 or similar
         Expr::new(1, 1, 1)
     } else {
+        // general case
+
         println!("{}", e);
+
         // handle case where n is a multiple of d
-        // (d*m)/d -> m or (n*m)/d -> m(n/d)
+        // (d*m)/d -> m OR (n*m)/d -> m(n/d)
         e.c = 1.max(e.n / e.d);
         e.n = e.n / e.c;
         println!("{}", e);
@@ -139,19 +170,24 @@ pub fn iterative(mut e: Expr) -> Expr {
             e.n = 1;
             println!("{}", e);
         } else if e.d > 1 {
-            // n/d
-            // n != d
-            // n % d != 0
-            // d % n != 0
-            // 1 < n < d
+            // Form: n/d
+            // Known constraints:
+            // - n != d
+            // - n % d != 0
+            // - d % n != 0
+            // - 1 < n < d
 
             let mut m = 2;
             let mut gm = 2;
 
             // find (n/m)/(d/m) cases
+            // iterate up to the current denominator
             while m < e.d {
                 m += 1;
+                // check if we've found a new smallest denominator
+                //(in other words, the largest factor)
                 if e.n % m == 0 && e.d % m == 0 {
+                    // update tracker
                     gm = m;
                 }
             }
@@ -160,6 +196,7 @@ pub fn iterative(mut e: Expr) -> Expr {
 
             if e.n % gm == 0 && e.d % gm == 0 && gm < e.d {
                 // n and d are both divisible by a common factor less than d
+                // this gives us our lowest common denominator
                 e.n = e.n / gm;
                 e.d = e.d / gm;
             } else {
