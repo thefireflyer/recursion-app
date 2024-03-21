@@ -1,0 +1,28 @@
+workspace = { members = ["recursion-lib"] }
+
+[package]
+name = "recursion-app"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.81"
+clap = "4.5.3"
+tailcall = "1.0.1"
+recursion-lib = { path = "recursion-lib" }
+
+[dev-dependencies]
+criterion = { version = "0.4", features = ["html_reports"] }
+
+
+[[bench]]
+name = "bench_main"
+harness = false
+
+# [[bench]]
+# name = "int_to_bin"
+# harness = false
+
+# [[bench]]
+# name = "lcd"
+# harness = false
