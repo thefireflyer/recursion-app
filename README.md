@@ -13,7 +13,7 @@
 ## Videos
 
 - [Spell checker video](https://youtu.be/wyySKhGMwgY)
-- [Recursion video]()
+- [Recursion video](https://youtu.be/ewVa0XAZUMw)
 
 ## Spell Checker
 
