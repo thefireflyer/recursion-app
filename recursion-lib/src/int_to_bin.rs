@@ -3,6 +3,54 @@
 use tailcall::tailcall;
 
 ////////////////////////////////////////////////////////////////////////////////
+/* p-code
+
+// Recursively writes `x` in binary
+//
+// Time complexity: O(1)
+//
+function recursive(x) {
+
+    /// Generate the binary representation
+    function inner(x, r, i) {
+        // Starting from the outermost bit, work inwards by checking if the value
+        // associated with that bit is in the remaining total.
+        // If it is, that means that bit should be on and we'll need to update our
+        // running total.
+        // Here, we'll do this recursively so we'll need the `i` tracking variable.
+        let y = x - 2^i
+        if y >= 0 {
+            // Current total contains the current bit value
+            // Switch bit on
+            r[i] = true
+            if i > 0 {
+                // Continue generating binary
+                return inner(y, r, i - 1)
+            }
+        } else if i > 0 {
+            // Continue generating binary
+            return inner(x, r, i - 1)
+        }
+    }
+
+    if x == 0 {
+        // basic edge case
+        return [false; 64]
+    } else {
+        let res = [false; 64]
+
+        // handle negative numbers
+        res[63] = x < 0
+
+        // actually compute the binary representation
+        inner(x.abs(), res, 62)
+
+        return res
+    }
+}
+
+*/
+////////////////////////////////////////////////////////////////////////////////
 
 /// Recursively writes `x` in binary
 ///
